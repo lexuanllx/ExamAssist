@@ -1,6 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../viewmodels/auth_viewmodel.dart';
 
 class RegisterView extends StatefulWidget {
@@ -18,15 +18,20 @@ class _RegisterViewState extends State<RegisterView> {
   final contact = TextEditingController();
   final password = TextEditingController();
 
-  // Validate Malaysian mobile phone numbers
+  String? selectedRole;
+
+  final List<String> roles = [
+    'Assistant Invigilator',
+    'Invigilator',
+    'Chief Invigilator',
+  ];
+
   String? validateMalaysianPhone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Please enter your contact number';
     }
 
-    final phoneRegex = RegExp(
-      r'^(?:01[0-9]{8,9}|\+?601[0-9]{8,9})$',
-    );
+    final phoneRegex = RegExp(r'^(?:01[0-9]{8,9}|\+?601[0-9]{8,9})$');
 
     if (!phoneRegex.hasMatch(value.trim())) {
       return 'Please enter a valid Malaysian mobile number';
@@ -61,19 +66,11 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   Future<void> register() async {
-    // Validate all Form fields first
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
-    if (name.text.trim().isEmpty ||
-        email.text.trim().isEmpty ||
-        password.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in required fields.'),
-        ),
-      );
+    if (selectedRole == null) {
       return;
     }
 
@@ -82,6 +79,7 @@ class _RegisterViewState extends State<RegisterView> {
       email: email.text.trim(),
       password: password.text,
       contact: contact.text.trim(),
+      role: selectedRole!,
     );
 
     if (!mounted) return;
@@ -128,9 +126,7 @@ class _RegisterViewState extends State<RegisterView> {
     final vm = context.watch<AuthViewModel>();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
+      appBar: AppBar(title: const Text('Register')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Form(
@@ -138,29 +134,63 @@ class _RegisterViewState extends State<RegisterView> {
           child: Column(
             children: [
               input('Full Name', name),
-              input('Email',
-                    email,
-                    validator: validateEmail,
-                    keyboardType: TextInputType.emailAddress,
-                  ),
+
+              input(
+                'Email',
+                email,
+                validator: validateEmail,
+                keyboardType: TextInputType.emailAddress,
+              ),
+
               input(
                 'Contact Number',
                 contact,
                 validator: validateMalaysianPhone,
                 keyboardType: TextInputType.phone,
               ),
+
               input(
                 'Password',
                 password,
                 obscure: true,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your password';
+                  }
+                  if (value.length < 6) {
+                    return 'Password must be at least 6 characters';
+                  }
+                  return null;
+                },
               ),
 
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Default role: Assistant Invigilator',
-                  style: TextStyle(color: Colors.grey),
+              const SizedBox(height: 6),
+
+              DropdownButtonFormField<String>(
+                initialValue: selectedRole,
+                decoration: const InputDecoration(
+                  labelText: 'Select Your Role',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.badge_outlined),
                 ),
+                hint: const Text('Choose your role'),
+                items: roles.map((role) {
+                  return DropdownMenuItem<String>(
+                    value: role,
+                    child: Text(role),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedRole = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please select your role';
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 20),

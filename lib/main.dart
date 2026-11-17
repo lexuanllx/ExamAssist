@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,21 +8,17 @@ import 'firebase_options.dart';
 import 'viewmodels/auth_viewmodel.dart';
 import 'views/auth/login_view.dart';
 import 'views/dashboards/dashboard_view.dart';
+import 'views/dashboards/invigilator_dashboard_view.dart';
+import 'views/dashboards/chief_invigilator_dashboard_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthViewModel(),
-        ),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
       child: const ExamAssistApp(),
     ),
   );
@@ -37,11 +32,10 @@ class ExamAssistApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ExamAssist',
-      theme: ThemeData(
-        colorSchemeSeed: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
       home: const AuthGate(),
+      //home: const InvigilatorDashboardView(),
+      //home: const ChiefInvigilatorDashboardView(),
     );
   }
 }
@@ -93,7 +87,19 @@ class AuthGate extends StatelessWidget {
               );
             }
 
-            return DashboardView(role: role);
+            switch (role) {
+              case 'Assistant Invigilator':
+                return DashboardView(role: role);
+              case 'Invigilator':
+                return const InvigilatorDashboardView();
+              case 'Chief Invigilator':
+                return const ChiefInvigilatorDashboardView();
+
+              default:
+                return const Scaffold(
+                  body: Center(child: Text('Invalid user role')),
+                );
+            }
           },
         );
       },
