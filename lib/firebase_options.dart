@@ -41,48 +41,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCxsWsxKr4RcEyyH5D13Oftp8f6lCAa2D0',
-    appId: '1:911910300401:web:319832e62aea2a7ced5750',
-    messagingSenderId: '911910300401',
-    projectId: 'examassist-fa316',
-    authDomain: 'examassist-fa316.firebaseapp.com',
-    storageBucket: 'examassist-fa316.firebasestorage.app',
-    measurementId: 'G-H84D0DPQTR',
-  );
-
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAOq0wLzE8zrBGQK3SoOPwqrjJAav4UtAY',
-    appId: '1:911910300401:android:037a49c008634598ed5750',
-    messagingSenderId: '911910300401',
-    projectId: 'examassist-fa316',
-    storageBucket: 'examassist-fa316.firebasestorage.app',
+    apiKey: 'AIzaSyDbI9fik-jQwz_aanPp2q_8Gn3yniBL7oA',
+    appId: '1:51807044459:web:ac85b9a97ab4ebd476c22e',
+    messagingSenderId: '51807044459',
+    projectId: 'examassist-90507',
+    authDomain: 'examassist-90507.firebaseapp.com',
+    storageBucket: 'examassist-90507.firebasestorage.app',
+    measurementId: 'G-288BZ0LFTX',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDGUt5lg2-gAwGrynSuhSq-oC1NlNacihY',
-    appId: '1:911910300401:ios:d1982672cabf1f24ed5750',
-    messagingSenderId: '911910300401',
-    projectId: 'examassist-fa316',
-    storageBucket: 'examassist-fa316.firebasestorage.app',
+    apiKey: 'AIzaSyBXsUehMnETLR9jdGMFb1_a-xPd1PiQeqA',
+    appId: '1:51807044459:ios:1209f2ab2d67593a76c22e',
+    messagingSenderId: '51807044459',
+    projectId: 'examassist-90507',
+    storageBucket: 'examassist-90507.firebasestorage.app',
     iosBundleId: 'com.example.examAssist',
   );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDGUt5lg2-gAwGrynSuhSq-oC1NlNacihY',
-    appId: '1:911910300401:ios:d1982672cabf1f24ed5750',
-    messagingSenderId: '911910300401',
-    projectId: 'examassist-fa316',
-    storageBucket: 'examassist-fa316.firebasestorage.app',
+    apiKey: 'AIzaSyBXsUehMnETLR9jdGMFb1_a-xPd1PiQeqA',
+    appId: '1:51807044459:ios:1209f2ab2d67593a76c22e',
+    messagingSenderId: '51807044459',
+    projectId: 'examassist-90507',
+    storageBucket: 'examassist-90507.firebasestorage.app',
     iosBundleId: 'com.example.examAssist',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCxsWsxKr4RcEyyH5D13Oftp8f6lCAa2D0',
-    appId: '1:911910300401:web:0bac2aebdaa83c76ed5750',
-    messagingSenderId: '911910300401',
-    projectId: 'examassist-fa316',
-    authDomain: 'examassist-fa316.firebaseapp.com',
-    storageBucket: 'examassist-fa316.firebasestorage.app',
-    measurementId: 'G-JESBR5BD3M',
+    apiKey: 'AIzaSyDbI9fik-jQwz_aanPp2q_8Gn3yniBL7oA',
+    appId: '1:51807044459:web:5b27ef5c7b2592c076c22e',
+    messagingSenderId: '51807044459',
+    projectId: 'examassist-90507',
+    authDomain: 'examassist-90507.firebaseapp.com',
+    storageBucket: 'examassist-90507.firebasestorage.app',
+    measurementId: 'G-QB8TRYM8YE',
+  );
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyBWaDzdc5eW3LJq-1oES_9fC5UcyqvGQHA',
+    appId: '1:51807044459:android:b850ee4c7b1f2b4576c22e',
+    messagingSenderId: '51807044459',
+    projectId: 'examassist-90507',
+    storageBucket: 'examassist-90507.firebasestorage.app',
   );
 }
