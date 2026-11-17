@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "911910300401",
+    "project_id": "examassist-fa316",
+    "storage_bucket": "examassist-fa316.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911910300401:android:037a49c008634598ed5750",
+        "android_client_info": {
+          "package_name": "com.example.exam_assist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOq0wLzE8zrBGQK3SoOPwqrjJAav4UtAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
