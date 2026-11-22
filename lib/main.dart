@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,11 +15,17 @@ import 'views/dashboards/chief_invigilator_dashboard_view.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthViewModel())],
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthViewModel(),
+        ),
+      ],
       child: const ExamAssistApp(),
     ),
   );
@@ -32,10 +39,11 @@ class ExamAssistApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ExamAssist',
-      theme: ThemeData(colorSchemeSeed: Colors.blue, useMaterial3: true),
+      theme: ThemeData(
+        colorSchemeSeed: Colors.blue,
+        useMaterial3: true,
+      ),
       home: const AuthGate(),
-      //home: const InvigilatorDashboardView(),
-      //home: const ChiefInvigilatorDashboardView(),
     );
   }
 }
@@ -66,38 +74,62 @@ class AuthGate extends StatelessWidget {
               .doc(firebaseUser.uid)
               .snapshots(),
           builder: (context, userSnapshot) {
-            if (userSnapshot.connectionState == ConnectionState.waiting) {
+            if (userSnapshot.hasError) {
               return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
+                body: Center(
+                  child: Text('Unable to load user profile.'),
+                ),
               );
             }
 
-            if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-              return const Scaffold(
-                body: Center(child: Text('User profile not found')),
+            if (!userSnapshot.hasData ||
+                !userSnapshot.data!.exists) {
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CircularProgressIndicator(),
+                      const SizedBox(height: 16),
+                      const Text('Setting up your account...'),
+                      TextButton(
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                        },
+                        child: const Text('Logout'),
+                      ),
+                    ],
+                  ),
+                ),
               );
             }
 
             final userData = userSnapshot.data!.data()!;
             final role = userData['role'] as String?;
 
-            if (role == null) {
+            if (role == null || role.isEmpty) {
               return const Scaffold(
-                body: Center(child: Text('User role not assigned')),
+                body: Center(
+                  child: Text('User role not assigned'),
+                ),
               );
             }
 
             switch (role) {
               case 'Assistant Invigilator':
                 return DashboardView(role: role);
+
               case 'Invigilator':
                 return const InvigilatorDashboardView();
+
               case 'Chief Invigilator':
                 return const ChiefInvigilatorDashboardView();
 
               default:
                 return const Scaffold(
-                  body: Center(child: Text('Invalid user role')),
+                  body: Center(
+                    child: Text('Invalid user role'),
+                  ),
                 );
             }
           },
