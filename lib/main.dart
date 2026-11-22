@@ -1,5 +1,5 @@
 
-import 'package:material_ui/material_ui.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +9,8 @@ import 'firebase_options.dart';
 import 'viewmodels/auth_viewmodel.dart';
 import 'views/auth/login_view.dart';
 import 'views/dashboards/dashboard_view.dart';
+import 'views/dashboards/invigilator_dashboard_view.dart';
+import 'views/dashboards/chief_invigilator_dashboard_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,32 +55,35 @@ class AuthGate extends StatelessWidget {
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+      builder: (context, authSnapshot) {
+        if (authSnapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
 
-        final user = snapshot.data;
-        if (user == null) return const LoginView();
+        final firebaseUser = authSnapshot.data;
 
-        // Listen to the user document so changes appear live.
+        if (firebaseUser == null) {
+          return const LoginView();
+        }
+
         return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
           stream: FirebaseFirestore.instance
               .collection('users')
-              .doc(user.uid)
+              .doc(firebaseUser.uid)
               .snapshots(),
-          builder: (context, profileSnapshot) {
-            if (profileSnapshot.hasError) {
+          builder: (context, userSnapshot) {
+            if (userSnapshot.hasError) {
               return const Scaffold(
-                body: Center(child: Text('Unable to load user profile.')),
+                body: Center(
+                  child: Text('Unable to load user profile.'),
+                ),
               );
             }
 
-            if (!profileSnapshot.hasData ||
-                !profileSnapshot.data!.exists) {
-              // Right after registering, the document may not exist yet.
+            if (!userSnapshot.hasData ||
+                !userSnapshot.data!.exists) {
               return Scaffold(
                 body: Center(
                   child: Column(
@@ -88,7 +93,9 @@ class AuthGate extends StatelessWidget {
                       const SizedBox(height: 16),
                       const Text('Setting up your account...'),
                       TextButton(
-                        onPressed: () => FirebaseAuth.instance.signOut(),
+                        onPressed: () {
+                          FirebaseAuth.instance.signOut();
+                        },
                         child: const Text('Logout'),
                       ),
                     ],
@@ -97,10 +104,34 @@ class AuthGate extends StatelessWidget {
               );
             }
 
-            final role =
-                (profileSnapshot.data!.data()?['role'] as String?) ?? '';
+            final userData = userSnapshot.data!.data()!;
+            final role = userData['role'] as String?;
 
-            return DashboardView(role: role);
+            if (role == null || role.isEmpty) {
+              return const Scaffold(
+                body: Center(
+                  child: Text('User role not assigned'),
+                ),
+              );
+            }
+
+            switch (role) {
+              case 'Assistant Invigilator':
+                return DashboardView(role: role);
+
+              case 'Invigilator':
+                return const InvigilatorDashboardView();
+
+              case 'Chief Invigilator':
+                return const ChiefInvigilatorDashboardView();
+
+              default:
+                return const Scaffold(
+                  body: Center(
+                    child: Text('Invalid user role'),
+                  ),
+                );
+            }
           },
         );
       },
