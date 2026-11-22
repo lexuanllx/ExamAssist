@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../services/auth_service.dart';
 
 class AuthViewModel extends ChangeNotifier {
@@ -12,6 +13,7 @@ class AuthViewModel extends ChangeNotifier {
     required String email,
     required String password,
     required String contact,
+    required String role,
   }) async {
     isLoading = true;
     errorMessage = null;
@@ -23,6 +25,7 @@ class AuthViewModel extends ChangeNotifier {
         email: email,
         password: password,
         contact: contact,
+        role: role,
       );
       return true;
     } on Exception catch (e) {
@@ -40,10 +43,7 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      await _service.login(
-        email: email,
-        password: password,
-      );
+      await _service.login(email: email, password: password);
       return true;
     } on Exception catch (e) {
       errorMessage = e.toString();
